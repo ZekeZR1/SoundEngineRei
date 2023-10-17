@@ -1,0 +1,6 @@
+{
+    "rust-analyzer.linkedProjects": [
+        ".\\SoundEngineRei\\Cargo.toml",
+        ".\\SoundEngineRei\\Cargo.toml"
+    ]
+}

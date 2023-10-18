@@ -11,6 +11,7 @@ impl WaveTableSynth{
             wave_table_size: wave_table_size
         }
     }
+    
     pub fn play(&self, frequency: f32, duration: u64){
         let wave_table = self.create_wave_table();
         let sample_rate = 44100;

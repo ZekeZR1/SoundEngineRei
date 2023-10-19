@@ -1,5 +1,6 @@
 use core::time::Duration;
 use rodio::{OutputStream, source::Source};
+use crate::comb::{Comb};
 
 pub struct WaveTableSynth{
     wave_table_size: usize
@@ -15,11 +16,13 @@ impl WaveTableSynth{
     pub fn play(&self, frequency: f32, duration: u64){
         let wave_table = self.create_wave_table();
         let sample_rate = 44100;
+        let comb_filter = Comb::new(1116);
         let mut oscillator = Oscillator::new(sample_rate, wave_table);
         oscillator.set_frequency(frequency);
 
         let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-        let _result = stream_handle.play_raw(oscillator.convert_samples());
+        let samples = oscillator.convert_samples();
+        let _result = stream_handle.play_raw(samples);
 
         std::thread::sleep(std::time::Duration::from_secs(duration))
     }
@@ -37,17 +40,20 @@ struct Oscillator{
     sample_rate: u32,
     wave_table: Vec<f32>,
     index: f32,
-    index_increment: f32
+    index_increment: f32,
 }
 
+
 impl Oscillator{
-    fn new(sample_rate: u32, wave_table: Vec<f32>) -> Oscillator{
-        return Oscillator {
+    fn new(sample_rate: u32, wave_table: Vec<f32>) -> Oscillator {
+        let oscillator = Oscillator{
             sample_rate:sample_rate,
             wave_table: wave_table,
             index: 0.0,
-            index_increment: 0.0
-        }
+            index_increment: 0.0,
+        };
+
+        oscillator
     }
 
     fn set_frequency(&mut self, frequency: f32){

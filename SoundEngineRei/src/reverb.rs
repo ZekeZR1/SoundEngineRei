@@ -1,8 +1,12 @@
 // freeverb
 // https://ccrma.stanford.edu/~jos/pasp/Freeverb.html
 
-const NUM_COMBS: u32 = 8;
-const NUM_ALLPASSES: u32 = 4;
+mod comb;
+use comb::Comb;
+
+
+const NUM_COMBS: usize = 8;
+const NUM_ALLPASSES: usize = 4;
 
 pub struct Freeverb{
     gain: f32,
@@ -53,26 +57,8 @@ impl Freeverb{
         // output
         out.0 = out.0 * self.wet_gains.0 + out.1 * self.wet_gains.1 + input.0 * self.dry;
         out.1 = out.1 * self.wet_gains.1 + out.0 * self.wet_gains.0 + input.1 * self.dry;
-        
+
         return out;
-    }
-}
-
-pub struct Comb{
-
-}
-
-impl Comb{
-    pub fn new() -> Comb{
-        return Comb{
-
-        }
-    }
-
-    pub fn process(&mut self, input: f64) -> f64{
-        // todo comb filter
-
-        return input;
     }
 }
 

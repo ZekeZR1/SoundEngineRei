@@ -19,6 +19,15 @@ impl Comb{
         }
     }
 
+    pub fn set_damp(&mut self, value: f64){
+        self.damp1 = value;
+        self.damp2 = 1.0 - value;
+    }
+
+    pub fn set_feedback(&mut self, value: f64){
+        self.feedback = value;
+    }
+
     pub fn process(&mut self, input: f64) -> f64{
         let output = self.buffer[self.bufferidx];
 
@@ -27,7 +36,7 @@ impl Comb{
         self.buffer[self.bufferidx] = input + (self.filterstore * self.feedback);
 
         self.bufferidx += 1;
-        if self.bufferidx > self.buffer.len() - 1 {
+        if self.bufferidx >= self.buffer.len(){
             self.bufferidx = 0
         }
 

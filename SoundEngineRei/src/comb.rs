@@ -40,6 +40,6 @@ impl Comb{
             self.bufferidx = 0
         }
 
-        return output;
+        output
     }
 }

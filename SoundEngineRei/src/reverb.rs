@@ -1,42 +1,102 @@
 // freeverb
 // https://ccrma.stanford.edu/~jos/pasp/Freeverb.html
 
-mod comb;
-use comb::Comb;
-
-
-const NUM_COMBS: usize = 8;
-const NUM_ALLPASSES: usize = 4;
+use crate::{allpass::AllPass, comb::Comb};
+use crate::tuning;
 
 pub struct Freeverb{
-    gain: f32,
-    combs: [(Comb, Comb); NUM_COMBS],
-    allpasses: [(AllPass, AllPass); NUM_ALLPASSES],
+    gain: f64,
+    room_size: (f64, f64),
+    wet: f64,
     wet_gains: (f64, f64),
-    wet: f32,
-    dry: f32,
+    dry: f64,
+    width: f64,
+    mode: f64,
+    combs: [(Comb, Comb); tuning::NUM_COMBS],
+    allpasses: [(AllPass, AllPass); tuning::NUM_ALLPASSES],
+}
+
+fn adjust_length(length: usize, sample_rate: usize) -> usize{
+    (length as f64 * sample_rate as f64 / 44100.0) as usize
 }
 
 impl Freeverb{
-    pub fn new(gain: f32) -> Freeverb{
-        return Freeverb{
-            gain: gain,
+    pub fn new(sample_rate: usize) -> Freeverb{
+        let mut freeverb = Freeverb{
+            gain: tuning::FIXED_GAIN,
+            room_size: (0.0, 0.0),
+            wet: 0.0,
+            wet_gains: (0.0,0.0),
+            dry: 0.0,
+            width: 0.0,
+            mode: 0.0,
             combs: [
                 (
-                    Comb::new(),
-                    Comb::new()
+                    Comb::new(adjust_length(tuning::COMB_TUNING_L1, sample_rate)),
+                    Comb::new(adjust_length(tuning::COMB_TUNING_R1, sample_rate)),              
                 ),
-                // x8
+                (
+                    Comb::new(adjust_length(tuning::COMB_TUNING_L2, sample_rate)),
+                    Comb::new(adjust_length(tuning::COMB_TUNING_R2, sample_rate)),              
+                ),
+                (
+                    Comb::new(adjust_length(tuning::COMB_TUNING_L3, sample_rate)),
+                    Comb::new(adjust_length(tuning::COMB_TUNING_R3, sample_rate)),              
+                ),
+                (
+                    Comb::new(adjust_length(tuning::COMB_TUNING_L4, sample_rate)),
+                    Comb::new(adjust_length(tuning::COMB_TUNING_R4, sample_rate)),              
+                ),
+                (
+                    Comb::new(adjust_length(tuning::COMB_TUNING_L5, sample_rate)),
+                    Comb::new(adjust_length(tuning::COMB_TUNING_R5, sample_rate)),              
+                ),
+                (
+                    Comb::new(adjust_length(tuning::COMB_TUNING_L6, sample_rate)),
+                    Comb::new(adjust_length(tuning::COMB_TUNING_R6, sample_rate)),              
+                ),
+                (
+                    Comb::new(adjust_length(tuning::COMB_TUNING_L7, sample_rate)),
+                    Comb::new(adjust_length(tuning::COMB_TUNING_R7, sample_rate)),              
+                ),
+                (
+                    Comb::new(adjust_length(tuning::COMB_TUNING_L8, sample_rate)),
+                    Comb::new(adjust_length(tuning::COMB_TUNING_R8, sample_rate)),              
+                ),
             ],
             allpasses: [
                 (
-                    AllPass::new(),
-                    AllPass::new()
-                )
-                // x4
-            ],
-            wet_gains: (0,0),
-        }
+                    AllPass::new(adjust_length(tuning::ALLPASS_TUNING_L1, sample_rate)),
+                    AllPass::new(adjust_length(tuning::ALLPASS_TUNING_R1, sample_rate)),
+                ),
+                (
+                    AllPass::new(adjust_length(tuning::ALLPASS_TUNING_L2, sample_rate)),
+                    AllPass::new(adjust_length(tuning::ALLPASS_TUNING_R2, sample_rate)),
+                ),
+                (
+                    AllPass::new(adjust_length(tuning::ALLPASS_TUNING_L3, sample_rate)),
+                    AllPass::new(adjust_length(tuning::ALLPASS_TUNING_R3, sample_rate)),
+                ),
+                (
+                    AllPass::new(adjust_length(tuning::ALLPASS_TUNING_L4, sample_rate)),
+                    AllPass::new(adjust_length(tuning::ALLPASS_TUNING_R4, sample_rate)),
+                ),
+            ]
+        };
+
+        // todo 
+        //freeverb.set
+
+        freeverb
+    }
+
+    fn update(&mut self){
+        // todo 
+    }
+
+    fn set_wet(&mut self, value: f64){
+        self.wet = value * tuning::SCALE_WET;
+        self.update();
     }
 
     fn process(&mut self, input: (f64, f64)) -> (f64, f64){
@@ -59,23 +119,5 @@ impl Freeverb{
         out.1 = out.1 * self.wet_gains.1 + out.0 * self.wet_gains.0 + input.1 * self.dry;
 
         return out;
-    }
-}
-
-pub struct AllPass{
-
-}
-
-impl AllPass{
-    pub fn new() -> AllPass{
-        return AllPass{
-
-        }
-    }
-
-    pub fn process(&mut self, input: f64) -> f64{
-        // todo all pass filter
-        
-        return input;
     }
 }

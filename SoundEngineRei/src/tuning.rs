@@ -2,6 +2,7 @@
 
 pub const NUM_COMBS: usize = 8;
 pub const NUM_ALLPASSES: usize = 4;
+pub const MUTED:f64 = 0.0;
 pub const FIXED_GAIN: f64 = 0.015;
 pub const SCALE_WET: f64 = 3.0;
 pub const SCALE_DRY: f64 = 2.0;
@@ -11,6 +12,10 @@ pub const OFFSET_ROOM: f64 = 0.7;
 pub const INITIAL_ROOM: f64 = 0.5;
 pub const INITIAL_DAMP: f64 = 0.5;
 pub const INITIAL_WET: f64 = 1.0 / SCALE_WET;
+pub const INITIAL_DRY: f64 = 0.0;
+pub const INITIAL_WIDTH: f64 = 1.0;
+pub const INITIAL_MODE: f64 = 0.0;
+pub const FREEZE_MODE: f64 = 0.5;
 pub const STEREO_SPREAD: usize = 23;
 
 // Assuming 44.1KHz Sample rate

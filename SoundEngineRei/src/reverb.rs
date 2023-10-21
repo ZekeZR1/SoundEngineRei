@@ -2,7 +2,7 @@
 // https://ccrma.stanford.edu/~jos/pasp/Freeverb.html
 
 use crate::{allpass::AllPass, comb::Comb};
-use crate::{tuning, allpass};
+use crate::tuning;
 
 pub struct Freeverb{
     gain: f64,
@@ -156,11 +156,11 @@ impl Freeverb{
         // combs
         let mut room_size = self.room_size;
         let mut damp = self.damp;
-        let mut gain = tuning::FIXED_GAIN;
+        self.gain = tuning::FIXED_GAIN;
         if self.mode >= tuning::FREEZE_MODE{
             room_size = 1.0;
             damp = 0.0;
-            gain = tuning::MUTED;
+            self.gain = tuning::MUTED;
         }
         for combs in self.combs.iter_mut(){
             // fb

@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 rodio = "0.17.2"
+hound = "3.5.1"
+wav_io = "0.1.12"
